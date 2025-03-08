@@ -6,17 +6,23 @@ import React, {
   Dispatch,
   SetStateAction,
 } from "react";
-import { getTodos } from "../services/api";
+import { getTodos, createTodo, deleteTodo, updateTodo } from "../services/api";
 
 export interface Todo {
-  id: number;
-  title: string;
+  _id: string;
+  username: string;
+  text: string;
+  isDone: boolean;
+  createdAt: string;
   completed: boolean;
 }
 
 interface TodoContextType {
   todos: Todo[];
   setTodos: Dispatch<SetStateAction<Todo[]>>;
+  addTodo: (text: string) => Promise<void>;
+  deleteTodoItem: (id: string) => Promise<void>;
+  updateTodoItem: (id: string, completed: boolean) => Promise<void>;
 }
 
 export const TodoContext = createContext<TodoContextType | undefined>(
@@ -36,12 +42,41 @@ export const TodoProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const addTodo = async (text: string) => {
+    try {
+      await createTodo(text);
+      fetchTodos();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const deleteTodoItem = async (id: string) => {
+    try {
+      await deleteTodo(id);
+      fetchTodos();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const updateTodoItem = async (id: string, completed: boolean) => {
+    try {
+      await updateTodo(id);
+      fetchTodos();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     fetchTodos();
   }, []);
 
   return (
-    <TodoContext.Provider value={{ todos, setTodos }}>
+    <TodoContext.Provider
+      value={{ todos, setTodos, addTodo, deleteTodoItem, updateTodoItem }}
+    >
       {children}
     </TodoContext.Provider>
   );
