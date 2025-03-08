@@ -1,27 +1,36 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useTodo } from "../context/TodoContext";
 import styled from "styled-components";
 
 function TodoItems() {
-  const { todos, deleteTodoItem, updateTodoItem } = useTodo();
+  const { todos, filteredTodos, deleteTodoItem, updateTodoItem } = useTodo();
+
+  useEffect(() => {
+    console.log(filteredTodos);
+  }, [filteredTodos]);
+
   return (
     <TodoItemsContainer>
-      {todos.map((todo) => (
-        <TodoItem key={todo._id}>
-          <Checkbox
-            type="checkbox"
-            checked={todo.completed}
-            onChange={() => updateTodoItem(todo._id, !todo.completed)}
-            // onChange={() => console.log(`Toggled: ${todo.text}`)}
-          />
-          <TodoText>
-            {todo.text} - {todo.isDone ? "Done" : "Not Done"}
-          </TodoText>
-          <OptionsButton onClick={() => deleteTodoItem(todo._id.toString())}>
-            delete
-          </OptionsButton>
-        </TodoItem>
-      ))}
+      {filteredTodos.length === 0 ? (
+        <p>No matching tasks.</p>
+      ) : (
+        filteredTodos.map((todo) => (
+          <TodoItem key={todo._id}>
+            <Checkbox
+              type="checkbox"
+              checked={todo.isDone}
+              onChange={() => updateTodoItem(todo._id, !todo.isDone)}
+              // onChange={() => console.log(`Toggled: ${todo.text}`)}
+            />
+            <TodoText>
+              {todo.text} - {todo.isDone ? "Done" : "Not Done"}
+            </TodoText>
+            <OptionsButton onClick={() => deleteTodoItem(todo._id.toString())}>
+              delete
+            </OptionsButton>
+          </TodoItem>
+        ))
+      )}
     </TodoItemsContainer>
   );
 }

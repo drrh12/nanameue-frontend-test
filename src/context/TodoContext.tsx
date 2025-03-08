@@ -5,6 +5,7 @@ import React, {
   useContext,
   Dispatch,
   SetStateAction,
+  useMemo,
 } from "react";
 import { getTodos, createTodo, deleteTodo, updateTodo } from "../services/api";
 
@@ -19,10 +20,13 @@ export interface Todo {
 
 interface TodoContextType {
   todos: Todo[];
+  filter: string;
+  setFilter: Dispatch<SetStateAction<string>>;
   setTodos: Dispatch<SetStateAction<Todo[]>>;
   addTodo: (text: string) => Promise<void>;
   deleteTodoItem: (id: string) => Promise<void>;
   updateTodoItem: (id: string, completed: boolean) => Promise<void>;
+  filteredTodos: Todo[];
 }
 
 export const TodoContext = createContext<TodoContextType | undefined>(
@@ -31,7 +35,7 @@ export const TodoContext = createContext<TodoContextType | undefined>(
 
 export const TodoProvider = ({ children }: { children: React.ReactNode }) => {
   const [todos, setTodos] = useState<Todo[]>([]);
-  const [filter, setFilter] = useState(["all", "done", "undone"]);
+  const [filter, setFilter] = useState<string>("all");
 
   const fetchTodos = async () => {
     try {
@@ -69,13 +73,41 @@ export const TodoProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  //   const filteredTodos = todos.filter((todo) => {
+  //     if (filter[0] === "all") return true;
+  //     if (filter[0] === "done") return todo.isDone;
+  //     if (filter[0] === "undone") return !todo.isDone;
+  //   });
+
+  const filteredTodos = useMemo(() => {
+    console.log("current filter", filter);
+    if (filter === "all") return todos;
+    return todos.filter((todo) =>
+      filter === "done" ? todo.isDone : !todo.isDone
+    );
+    // return todos.filter((todo) => {
+    //   if (filter === "all") return true;
+    //   if (filter === "done") return todo.isDone;
+    //   if (filter === "undone") return !todo.isDone;
+    // });
+  }, [todos, filter]);
+
   useEffect(() => {
     fetchTodos();
   }, []);
 
   return (
     <TodoContext.Provider
-      value={{ todos, setTodos, addTodo, deleteTodoItem, updateTodoItem }}
+      value={{
+        todos,
+        setTodos,
+        addTodo,
+        deleteTodoItem,
+        updateTodoItem,
+        filter,
+        setFilter,
+        filteredTodos,
+      }}
     >
       {children}
     </TodoContext.Provider>
