@@ -4,7 +4,7 @@ import { getTodos, createTodo, updateTodo, deleteTodo } from "../services/api";
 import ProgressBar from "./ProgressBar";
 import Filter from "./Filter";
 import TodoInput from "./TodoInput";
-import TodoTasks from "./TodoTasks";
+import TodoItems from "./TodoItems";
 
 function TodoList() {
   const [todos, setTodos] = useState([]);
@@ -43,7 +43,7 @@ function TodoList() {
           </header>
           <main>
             <TodoInput />
-            <TodoTasks />
+            <TodoItems />
           </main>
         </TodoContainer>
       </AppContainer>
