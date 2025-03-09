@@ -1,35 +1,10 @@
-import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { getTodos, createTodo, updateTodo, deleteTodo } from "../services/api";
 import ProgressBar from "./ProgressBar";
 import Filter from "./Filter";
 import TodoInput from "./TodoInput";
 import TodoItems from "./TodoItems";
 
 function TodoList() {
-  const [todos, setTodos] = useState([]);
-  let todoID: string = "diWcIFvCAdz8K2jslpAe";
-
-  useEffect(() => {
-    const fetchTodos = async () => {
-      const todos = await getTodos();
-      setTodos(todos);
-    };
-    fetchTodos();
-  }, []);
-
-  const handleCreateTodo = () => {
-    createTodo("newTodo");
-  };
-
-  const handleUpdateTodo = () => {
-    updateTodo(todoID);
-  };
-
-  const handleDeleteTodo = () => {
-    deleteTodo(todoID);
-  };
-
   return (
     <div>
       <AppContainer>
@@ -42,8 +17,10 @@ function TodoList() {
             </TodoHeader>
           </header>
           <main>
-            <TodoInput />
-            <TodoItems />
+            <ItemsWrapper>
+              <TodoInput />
+              <TodoItems />
+            </ItemsWrapper>
           </main>
         </TodoContainer>
       </AppContainer>
@@ -53,30 +30,20 @@ function TodoList() {
 
 const AppContainer = styled.div`
   width: 100%;
-  min-height: 100%;
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding: 40px 20px;
+  padding: 40px;
   background-color: #d1d0d9;
 `;
 
 const TodoContainer = styled.div`
-  width: 720px;
+  width: 40%;
   border-radius: 20px;
-  padding: 40px;
+  padding: 60px;
   position: relative;
   background-color: #f5f5f5;
-
-  @media (max-width: 991px) {
-    width: 100%;
-    max-width: 720px;
-    padding: 20px;
-  }
-
-  @media (max-width: 640px) {
-    padding: 15px;
-  }
 `;
 
 const TodoHeader = styled.div`
@@ -92,6 +59,10 @@ const TodoTitle = styled.h1`
   font-size: 24px;
   font-weight: 500;
   margin: 0;
+`;
+
+const ItemsWrapper = styled.div`
+  width: 100%;
 `;
 
 TodoList.propTypes = {};

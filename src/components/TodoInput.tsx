@@ -1,26 +1,45 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useTodo } from "../context/TodoContext";
+
 function TodoInput() {
   const { addTodo } = useTodo();
   const [text, setText] = useState("");
 
-  const handleAddTodo = () => {
-    addTodo(text);
+  const handleAddTodo = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (text.trim()) {
+      addTodo(text);
+      setText("");
+    }
   };
 
   return (
-    <InputContainer>
-      <Input onChange={(e) => setText(e.target.value)}></Input>
-      <AddButton onClick={handleAddTodo}>ADD</AddButton>
+    <InputContainer onSubmit={handleAddTodo}>
+      <InputWrapper>
+        <Input
+          placeholder="Add your to-do ..."
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+        />
+        <AddButton type="submit">Add</AddButton>
+      </InputWrapper>
     </InputContainer>
   );
 }
 
-const InputContainer = styled.div`
+const InputContainer = styled.form`
   display: flex;
   align-items: center;
-  gap: 16px;
+  margin-bottom: 16px;
+  width: 100%;
+`;
+
+const InputWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
 `;
 
 const Input = styled.input`
@@ -28,24 +47,36 @@ const Input = styled.input`
   height: 46px;
   border-radius: 9999px;
   border: none;
-  padding: 0 80px 0 20px;
+  padding: 0 110px 0 20px;
   font-family: "Roboto", sans-serif;
   font-size: 16px;
   color: #2e2e2e;
   background-color: #fff;
-  margin-bottom: 16px;
-
-  &:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px #526f92;
-  }
+  outline: none;
 `;
 
 const AddButton = styled.button`
-  background-color: #526f92;
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
   color: #fff;
   border: none;
-  border-radius: 8px;
+  border-radius: 999px;
+  padding: 10px 17px;
+  font-family: "Roboto", sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  background-color: #526f92;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: #425a77;
+  }
+
+  &:focus {
+    outline: none;
+  }
 `;
 
 export default TodoInput;
