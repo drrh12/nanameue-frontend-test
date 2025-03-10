@@ -7,6 +7,8 @@ Todo List application built for Nanameue as a frontend engineer test.
 - **Token Address:** `0xee5fbad6d95f152871409d987c4da7ffb00347c6`
 - [View on OKX Explorer](https://www.okx.com/pt-br/web3/explorer/amoy/token/0xee5fbad6d95f152871409d987c4da7ffb00347c6?address=0x019ec47518c33db29cfe7ffc06025ef8b64efa52)
 
+<img width="945" alt="image" src="https://github.com/user-attachments/assets/e94e1c60-5e55-4358-a30c-bd3523e394a5" />
+
 ### Features
 
 - Create, delete, toggle tasks, and filter by status
