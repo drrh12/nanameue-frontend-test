@@ -91,7 +91,7 @@ export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
     };
 
     initEthers();
-  }, [fetchTokenBalance]);
+  }, []);
 
   const rewardTaskCompletion = async () => {
     if (!contract || !userAddress || !provider) {
