@@ -21,8 +21,8 @@ export interface Todo {
 interface TodoContextType {
   todos: Todo[];
   filter: string;
-  setFilter: Dispatch<SetStateAction<string>>;
-  setTodos: Dispatch<SetStateAction<Todo[]>>;
+  setFilter: (filter: string) => void;
+  setTodos: (todos: Todo[]) => void;
   addTodo: (text: string) => Promise<void>;
   deleteTodoItem: (id: string) => Promise<void>;
   updateTodoItem: (id: string, completed: boolean) => Promise<void>;
