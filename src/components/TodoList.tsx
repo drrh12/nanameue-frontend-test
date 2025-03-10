@@ -3,8 +3,11 @@ import ProgressBar from "./ProgressBar";
 import Filter from "./Filter";
 import TodoInput from "./TodoInput";
 import TodoItems from "./TodoItems";
+import { useWeb3 } from "../context/Web3Context";
 
 function TodoList() {
+  const { connectWallet, userAddress, tokenBalance, isConnected } = useWeb3();
+
   return (
     <div>
       <AppContainer>
@@ -13,6 +16,16 @@ function TodoList() {
           <header>
             <TodoHeader>
               <TodoTitle>To-dos</TodoTitle>
+              {isConnected ? (
+                <TokenDisplay>
+                  <TokenLabel>Tokens:</TokenLabel>
+                  <TokenValue>{tokenBalance}</TokenValue>
+                </TokenDisplay>
+              ) : (
+                <ConnectButton onClick={connectWallet}>
+                  Connect Wallet
+                </ConnectButton>
+              )}
               <Filter></Filter>
             </TodoHeader>
           </header>
@@ -59,6 +72,45 @@ const TodoTitle = styled.h1`
   font-size: 24px;
   font-weight: 500;
   margin: 0;
+`;
+
+const TokenDisplay = styled.div`
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+  padding: 8px 16px;
+  border-radius: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+`;
+
+const TokenLabel = styled.span`
+  font-family: "Roboto", sans-serif;
+  font-size: 14px;
+  color: #666;
+  margin-right: 8px;
+`;
+
+const TokenValue = styled.span`
+  font-family: "Roboto", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #4c49ed;
+`;
+
+const ConnectButton = styled.button`
+  background-color: #4c49ed;
+  color: white;
+  border: none;
+  border-radius: 16px;
+  padding: 8px 16px;
+  font-family: "Roboto", sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #3c39dd;
+  }
 `;
 
 const ItemsWrapper = styled.div`

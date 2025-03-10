@@ -1,10 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useTodo } from "../context/TodoContext";
+import { useWeb3 } from "../context/Web3Context";
 import styled from "styled-components";
 import deleteIcon from "../imgs/delete-icon.svg";
 
 function TodoItems() {
   const { filteredTodos, deleteTodoItem, updateTodoItem } = useTodo();
+  const { rewardTaskCompletion, isConnected } = useWeb3();
   // state to track which dropdown is open
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -34,6 +36,22 @@ function TodoItems() {
     setOpenDropdownId(openDropdownId === todoId ? null : todoId);
   };
 
+  // handle task completion and reward
+  const handleTaskCompletion = async (todoId: string, isDone: boolean) => {
+    // only reward if task is completed and wallet connected
+    if (!isDone && isConnected) {
+      try {
+        await updateTodoItem(todoId, true);
+        await rewardTaskCompletion();
+      } catch (error) {
+        console.error("Error handling task completion:", error);
+      }
+    } else {
+
+      await updateTodoItem(todoId, isDone);
+    }
+  };
+
   return (
     <TodoItemsContainer>
       {filteredTodos.length === 0 ? (
@@ -45,8 +63,9 @@ function TodoItems() {
               <Checkbox
                 type="checkbox"
                 checked={todo.isDone}
-                onChange={() => updateTodoItem(todo._id, !todo.isDone)}
+                // onChange={() => updateTodoItem(todo._id, !todo.isDone)}
                 // onChange={() => console.log(`Toggled: ${todo.text}`)}
+                onClick={() => handleTaskCompletion(todo._id, todo.isDone)}
               />
               <TodoText>{todo.text}</TodoText>
             </TodoTextContainer>
